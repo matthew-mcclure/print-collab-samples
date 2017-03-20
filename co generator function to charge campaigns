@@ -1,0 +1,34 @@
+function chargeCard(queryCondition) {
+        return co(function*() {
+            const cursor = Order.find(queryCondition)
+                .populate('user_id campaign', 'payment.stripe_id description price')
+                .cursor()
+
+            for (let order = yield cursor.next(); order != null; order = yield cursor.next()) {
+                stripe.charges.create({
+                    'customer': order.user_id.payment.stripe_id,
+                    'amount': order.campaign.price,
+                    'currency': 'usd',
+                    'description': order.campaign.description
+                }, (err, res) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        order.update({
+                            $set: {
+                                status: 'paid',
+                                'payment.charge_id': res.id,
+                                'payment.charge_date': Date.now()
+                            }
+                        })
+                        .then((data) => {
+                            // no data is returned
+                        })
+                           .catch((reason) => {
+                               console.log(reason)
+                           })
+                    }
+                })
+            }
+        })
+    }
