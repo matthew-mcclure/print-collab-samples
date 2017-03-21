@@ -4,7 +4,7 @@ angular.module('public.faqs')
         bindings: {
             count: '<'
         },
-        templateUrl: '/client/aboutUs/components/templates/faqsmain.tpl.html'
+        templateUrl: '/../../yourURL.html'
     })
 
 FaqsMainController.$inject = ['$state', 'FaqsService']
