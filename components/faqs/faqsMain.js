@@ -2,7 +2,7 @@
 angular.module('public.faqs')
     .component('faqsMain', {
         bindings: {
-            count: '='
+            count: '<'
         },
         templateUrl: '/client/aboutUs/components/templates/faqsmain.tpl.html'
     })
